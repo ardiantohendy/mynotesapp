@@ -1,11 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mynotes/views/content_view.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
+import 'package:mynotes/views/verify_email_view.dart';
 import 'firebase_options.dart';
-
-final whatToDo = HomePage();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +15,11 @@ void main() {
       primarySwatch: Colors.blue,
     ),
     home: const HomePage(),
+    routes: {
+      "/login/": (context) => const LoginView(),
+      "/register/": (context) => const RegisterView(),
+      "/verify/": (context) => const VerifyEmailView(),
+    },
   ));
 }
 
@@ -23,37 +28,27 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text("Home")),
-      ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
-              print(user?.email);
-              if (user!.emailVerified) {
-                print("you're a verified email");
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              if (user.emailVerified) {
+                print("Email is verified");
               } else {
-                print("You need to verify your email");
+                return const VerifyEmailView();
               }
-              return const Center(
-                  child: Text(
-                "DONE",
-                style: TextStyle(fontSize: 20),
-              ));
-            default:
-              return const Center(
-                  child: Text(
-                "LOADING...",
-                style: TextStyle(fontSize: 20),
-              ));
-          }
-        },
-      ),
+            } else {
+              return const LoginView();
+            }
+            return const ContentView();
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }

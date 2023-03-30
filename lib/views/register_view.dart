@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mynotes/firebase_options.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -32,16 +30,20 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text("Register")),
+        title: const Text("Register Page"),
       ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Column(
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Register Page",
+              style: TextStyle(fontSize: 25),
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 30, 0, 30),
+              child: Column(
                 children: [
                   TextField(
                     enableSuggestions: true,
@@ -56,32 +58,37 @@ class _RegisterViewState extends State<RegisterView> {
                     autocorrect: false,
                     controller: _password,
                     decoration: const InputDecoration(hintText: "Password"),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
-                      try {
-                        final userCredential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: email, password: password);
-                        print(userCredential);
-                      } on FirebaseAuthException catch (e) {
-                        print("Something bad happend");
-                        if (e.code == "email-already-in-use") {
-                          print(
-                              "Your email is already in use! Please use email that have not in use yet!");
-                        }
-                      }
-                    },
-                    child: const Text("REGISTER"),
-                  ),
+                  )
                 ],
-              );
-            default:
-              return const Text("Loading...");
-          }
-        },
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+                try {
+                  final userCredential = await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: email, password: password);
+                  print(userCredential);
+                } on FirebaseAuthException catch (e) {
+                  print("Something bad happend");
+                  if (e.code == "email-already-in-use") {
+                    print(
+                        "Your email is already in use! Please use email that have not in use yet!");
+                  }
+                }
+              },
+              child: const Text("REGISTER"),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil("/login/", (route) => false);
+                },
+                child: Text("Login"))
+          ],
+        ),
       ),
     );
   }
