@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VerifyEmailView extends StatefulWidget {
@@ -20,15 +21,22 @@ class _VerifwEmailViewState extends State<VerifyEmailView> {
         children: [
           Text(
             "Please verify your email address $user",
-            style: const TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 20),
             textAlign: TextAlign.center,
           ),
           TextButton(
               onPressed: () async {
                 final userEmail = FirebaseAuth.instance.currentUser;
                 await userEmail?.sendEmailVerification();
+                // FirebaseAuth.instance.signOut();
               },
-              child: const Text("Send email verification"))
+              child: const Text("Send email verification")),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil("/login/", (route) => false);
+              },
+              child: const Text("Back to Login"))
         ],
       ),
     );
