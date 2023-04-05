@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/Animation/FadeAnimation.dart';
+import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -29,70 +31,214 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login Page"),
-      ),
+      resizeToAvoidBottomInset: false,
       body: Container(
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            colors: [
+              Colors.orange[900]!,
+              Colors.orange[800]!,
+              Colors.orange[400]!,
+            ],
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Login Page",
-              style: TextStyle(fontSize: 25),
+            const SizedBox(
+              height: 50,
             ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 30, 0, 30),
+            Padding(
+              padding: const EdgeInsets.all(20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
-                    enableSuggestions: true,
-                    autocorrect: true,
-                    keyboardType: TextInputType.emailAddress,
-                    controller: _email,
-                    decoration: const InputDecoration(hintText: "Email"),
-                  ),
-                  TextField(
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    controller: _password,
-                    decoration: const InputDecoration(hintText: "Password"),
-                  )
+                  FadeAnimation(
+                      0.8,
+                      const Text(
+                        "Login",
+                        style: TextStyle(color: Colors.white, fontSize: 40),
+                      )),
+                  const SizedBox(height: 10),
+                  FadeAnimation(
+                      0.8,
+                      const Text(
+                        "Welcome back",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ))
                 ],
               ),
             ),
-            TextButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                try {
-                  final userCredential = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: email, password: password);
-                  print(userCredential);
-                  final userLogin = FirebaseAuth.instance.currentUser?.email;
-                  if (userLogin != false) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/main/', (route) => false);
-                  }
-                } on FirebaseAuthException catch (e) {
-                  print("Something bad happend");
-                  if (e.code == "user-not-found") {
-                    print("User not found! maybe you have not registered yet");
-                  } else if (e.code == "wrong-password") {
-                    print("Incorect password");
-                  }
-                }
-              },
-              child: const Text("LOGIN"),
+            const SizedBox(
+              height: 20,
             ),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil("/register/", (route) => false);
-                },
-                child: Text("Register an email"))
+            Expanded(
+              child: FadeAnimation(
+                  2,
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(60),
+                          topRight: Radius.circular(60)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(30),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(255, 95, 27, .3),
+                                      blurRadius: 20,
+                                      offset: Offset(0, 10)),
+                                ]),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom:
+                                          BorderSide(color: Colors.grey[200]!),
+                                    ),
+                                  ),
+                                  child: TextField(
+                                    enableSuggestions: true,
+                                    autocorrect: true,
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: _email,
+                                    decoration: const InputDecoration(
+                                        hintText: "Email",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom:
+                                          BorderSide(color: Colors.grey[200]!),
+                                    ),
+                                  ),
+                                  child: TextField(
+                                    obscureText: true,
+                                    enableSuggestions: false,
+                                    autocorrect: false,
+                                    controller: _password,
+                                    decoration: const InputDecoration(
+                                        hintText: "Password",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          const Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 50),
+                            child: TextButton(
+                                onPressed: () async {
+                                  final email = _email.text;
+                                  final password = _password.text;
+                                  try {
+                                    final userCredential = await FirebaseAuth
+                                        .instance
+                                        .signInWithEmailAndPassword(
+                                            email: email, password: password);
+                                    devtools.log(userCredential.toString());
+                                    final userLogin = FirebaseAuth
+                                        .instance.currentUser?.emailVerified;
+                                    if (userLogin != false) {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                              '/main/', (route) => false);
+                                    } else {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                              '/verify/', (route) => false);
+                                    }
+                                  } on FirebaseAuthException catch (e) {
+                                    devtools.log("Something bad happend");
+                                    if (e.code == "user-not-found") {
+                                      devtools.log(
+                                          "User not found! maybe you have not registered yet");
+                                    } else if (e.code == "wrong-password") {
+                                      devtools.log("Incorect password");
+                                    } else {
+                                      devtools.log(e.code);
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.orange[900],
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 50),
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      "/register/", (route) => false);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.orange[900],
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      "Register",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
+            )
           ],
         ),
       ),

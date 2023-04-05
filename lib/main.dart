@@ -12,7 +12,7 @@ void main() {
   runApp(MaterialApp(
     title: 'Flutter Demo',
     theme: ThemeData(
-      primarySwatch: Colors.blue,
+      primarySwatch: Colors.lightBlue,
     ),
     home: const HomePage(),
     routes: {
@@ -66,11 +66,13 @@ class ContentView extends StatefulWidget {
 }
 
 class _ContentViewState extends State<ContentView> {
+  final userEmail = FirebaseAuth.instance.currentUser?.email;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Content Page"),
+        backgroundColor: Colors.black,
+        title: Text(userEmail.toString()),
         actions: [
           PopupMenuButton<MenuAction>(onSelected: (value) async {
             switch (value) {
@@ -92,26 +94,32 @@ class _ContentViewState extends State<ContentView> {
           })
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              "This is a content",
-              style: TextStyle(fontSize: 25),
-            ),
-            // TextButton(
-            //     onPressed: () async {
-            //       await FirebaseAuth.instance.signOut();
-            //       final userEmail = FirebaseAuth.instance.currentUser;
-            //       print(userEmail);
-            //     },
-            //     child: const Text("Log Out"))
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[Colors.yellowAccent, Colors.orange])),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                "This is a content",
+                style: TextStyle(fontSize: 25),
+              ),
+              // TextButton(
+              //     onPressed: () async {
+              //       await FirebaseAuth.instance.signOut();
+              //       final userEmail = FirebaseAuth.instance.currentUser;
+              //       print(userEmail);
+              //     },
+              //     child: const Text("Log Out"))
+            ],
+          ),
         ),
       ),
     );
-    ;
   }
 }
 
