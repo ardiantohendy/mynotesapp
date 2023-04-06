@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/Animation/FadeAnimation.dart';
 import 'dart:developer' as devtools show log;
 
+import '../constant/routes.dart';
+
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -48,7 +50,7 @@ class _LoginViewState extends State<LoginView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 50,
+              height: 120,
             ),
             Padding(
               padding: const EdgeInsets.all(20),
@@ -72,7 +74,7 @@ class _LoginViewState extends State<LoginView> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 50,
             ),
             Expanded(
               child: FadeAnimation(
@@ -174,11 +176,11 @@ class _LoginViewState extends State<LoginView> {
                                     if (userLogin != false) {
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
-                                              '/main/', (route) => false);
+                                              mainView, (route) => false);
                                     } else {
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
-                                              '/verify/', (route) => false);
+                                              verifyView, (route) => false);
                                     }
                                   } on FirebaseAuthException catch (e) {
                                     devtools.log("Something bad happend");
@@ -216,7 +218,7 @@ class _LoginViewState extends State<LoginView> {
                             child: TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pushNamedAndRemoveUntil(
-                                      "/register/", (route) => false);
+                                      registerView, (route) => false);
                                 },
                                 child: Container(
                                   height: 50,

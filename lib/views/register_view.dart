@@ -4,6 +4,8 @@ import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/Animation/FadeAnimation.dart';
 
+import '../constant/routes.dart';
+
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
 
@@ -49,7 +51,7 @@ class _RegisterViewState extends State<RegisterView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 50,
+              height: 120,
             ),
             Padding(
               padding: const EdgeInsets.all(20),
@@ -73,7 +75,7 @@ class _RegisterViewState extends State<RegisterView> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 50,
             ),
             Expanded(
               child: FadeAnimation(
@@ -201,7 +203,7 @@ class _RegisterViewState extends State<RegisterView> {
                             child: TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pushNamedAndRemoveUntil(
-                                      "/login/", (route) => false);
+                                      loginView, (route) => false);
                                 },
                                 child: Container(
                                   height: 50,
@@ -230,71 +232,6 @@ class _RegisterViewState extends State<RegisterView> {
           ],
         ),
       ),
-      // body: Container(
-      //   decoration: const BoxDecoration(
-      //       gradient: LinearGradient(
-      //           begin: Alignment.topLeft,
-      //           end: Alignment.bottomRight,
-      //           colors: <Color>[Colors.yellowAccent, Colors.orange])),
-      //   padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       const Text(
-      //         "Register Page",
-      //         style: TextStyle(fontSize: 25),
-      //       ),
-      //       Container(
-      //         margin: const EdgeInsets.fromLTRB(0, 30, 0, 30),
-      //         child: Column(
-      //           children: [
-      //             TextField(
-      //               enableSuggestions: true,
-      //               autocorrect: true,
-      //               keyboardType: TextInputType.emailAddress,
-      //               controller: _email,
-      //               decoration: const InputDecoration(
-      //                 hintText: "Email",
-      //               ),
-      //             ),
-      //             TextField(
-      //               obscureText: true,
-      //               enableSuggestions: false,
-      //               autocorrect: false,
-      //               controller: _password,
-      //               decoration: const InputDecoration(hintText: "Password"),
-      //             )
-      //           ],
-      //         ),
-      //       ),
-      //       TextButton(
-      //         onPressed: () async {
-      //           final email = _email.text;
-      //           final password = _password.text;
-      //           try {
-      //             final userCredential = await FirebaseAuth.instance
-      //                 .createUserWithEmailAndPassword(
-      //                     email: email, password: password);
-      //             devtools.log(userCredential.toString());
-      //           } on FirebaseAuthException catch (e) {
-      //             devtools.log("Something bad happend");
-      //             if (e.code == "email-already-in-use") {
-      //               devtools.log(
-      //                   "Your email is already in use! Please use email that have not in use yet!");
-      //             }
-      //           }
-      //         },
-      //         child: const Text("REGISTER"),
-      //       ),
-      //       ElevatedButton(
-      //           onPressed: () {
-      //             Navigator.of(context)
-      //                 .pushNamedAndRemoveUntil("/login/", (route) => false);
-      //           },
-      //           child: const Text("Login"))
-      //     ],
-      //   ),
-      // ),
     );
   }
 }
