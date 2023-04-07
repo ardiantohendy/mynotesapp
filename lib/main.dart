@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/alert/alert_dialog.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_email_view.dart';
@@ -90,7 +91,7 @@ class _ContentViewState extends State<ContentView> {
                 }
                 break;
               case MenuAction.notes:
-                final notesApear = await showNotesDialog(context);
+                await showErrorDialog(context, "You dont have any note yet!");
             }
             // devtools.log(value.toString());
             // showLogOutDialog(context);
@@ -146,7 +147,7 @@ Future<bool> showLogOutDialog(BuildContext context) {
                 },
                 child: const Text(
                   "Cancle",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.grey),
                 )),
             ElevatedButton(
                 onPressed: () {
@@ -162,23 +163,23 @@ Future<bool> showLogOutDialog(BuildContext context) {
       }).then((value) => value ?? false);
 }
 
-Future<bool> showNotesDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("You dont have any notes"),
-          content: const Text("Please add new notes if you don't have any"),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text(
-                  "Back",
-                  style: TextStyle(color: Colors.white),
-                ))
-          ],
-        );
-      }).then((value) => value ?? false);
-}
+// Future<void> showNotesDialog(BuildContext context) {
+//   return showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: const Text("You dont have any notes"),
+//           content: const Text("Please add new notes if you don't have any"),
+//           actions: [
+//             ElevatedButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pop(false);
+//                 },
+//                 child: const Text(
+//                   "Ok",
+//                   style: TextStyle(color: Colors.white),
+//                 ))
+//           ],
+//         );
+//       });
+// }

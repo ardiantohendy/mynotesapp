@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/Animation/FadeAnimation.dart';
+import 'package:mynotes/alert/alert_dialog.dart';
 
 import '../constant/routes.dart';
 
@@ -175,11 +176,14 @@ class _RegisterViewState extends State<RegisterView> {
                                   } on FirebaseAuthException catch (e) {
                                     devtools.log("Something bad happend");
                                     if (e.code == "email-already-in-use") {
-                                      devtools.log(
+                                      await showErrorDialog(context,
                                           "Your email is already in use! Please use email that have not in use yet!");
                                     } else {
-                                      devtools.log(e.code);
+                                      await showErrorDialog(context, e.code);
                                     }
+                                  } catch (e) {
+                                    await showErrorDialog(
+                                        context, e.toString());
                                   }
                                 },
                                 child: Container(

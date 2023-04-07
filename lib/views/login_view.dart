@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/Animation/FadeAnimation.dart';
 import 'dart:developer' as devtools show log;
 
+import '../alert/alert_dialog.dart';
 import '../constant/routes.dart';
 
 class LoginView extends StatefulWidget {
@@ -183,15 +184,18 @@ class _LoginViewState extends State<LoginView> {
                                               verifyView, (route) => false);
                                     }
                                   } on FirebaseAuthException catch (e) {
-                                    devtools.log("Something bad happend");
                                     if (e.code == "user-not-found") {
-                                      devtools.log(
+                                      await showErrorDialog(context,
                                           "User not found! maybe you have not registered yet");
                                     } else if (e.code == "wrong-password") {
-                                      devtools.log("Incorect password");
+                                      await showErrorDialog(
+                                          context, "Incorect password");
                                     } else {
-                                      devtools.log(e.code);
+                                      await showErrorDialog(context, e.code);
                                     }
+                                  } catch (e) {
+                                    await showErrorDialog(
+                                        context, e.toString());
                                   }
                                 },
                                 child: Container(
