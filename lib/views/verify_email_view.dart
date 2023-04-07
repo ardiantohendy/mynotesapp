@@ -19,20 +19,28 @@ class _VerifwEmailViewState extends State<VerifyEmailView> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "Please verify your email address $user",
-            style: const TextStyle(fontSize: 20),
+          const Text(
+            "Check your email for verifycation!",
+            style: TextStyle(fontSize: 20),
             textAlign: TextAlign.center,
           ),
+          const Text(
+              "If you haven't receive email verifycation, please the button bellow"),
           TextButton(
-              onPressed: () async {
-                final userEmail = FirebaseAuth.instance.currentUser;
-                await userEmail?.sendEmailVerification();
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(loginView, (route) => false);
-                FirebaseAuth.instance.signOut();
-              },
-              child: const Text("Send email verification"))
+            onPressed: () async {
+              final userEmail = FirebaseAuth.instance.currentUser;
+              await userEmail?.sendEmailVerification();
+            },
+            child: const Text("Send email verification"),
+          ),
+          TextButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(loginView, (route) => false);
+            },
+            child: const Text("Restart"),
+          )
         ],
       ),
     );

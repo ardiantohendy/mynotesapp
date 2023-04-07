@@ -180,8 +180,7 @@ class _LoginViewState extends State<LoginView> {
                                               mainView, (route) => false);
                                     } else {
                                       Navigator.of(context)
-                                          .pushNamedAndRemoveUntil(
-                                              verifyView, (route) => false);
+                                          .pushNamed(verifyView);
                                     }
                                   } on FirebaseAuthException catch (e) {
                                     if (e.code == "user-not-found") {
