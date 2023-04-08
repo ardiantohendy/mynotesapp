@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/Animation/FadeAnimation.dart';
 import 'package:mynotes/alert/alert_dialog.dart';
+import 'package:mynotes/services/auth/auth_exceptions.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 
 import '../constant/routes.dart';
 
@@ -168,32 +169,30 @@ class _RegisterViewState extends State<RegisterView> {
                                   final email = _email.text;
                                   final password = _password.text;
                                   try {
-                                    final userCredential = await FirebaseAuth
-                                        .instance
-                                        .createUserWithEmailAndPassword(
+                                    final userCredential =
+                                        await AuthService.firebase().createUser(
                                             email: email, password: password);
                                     devtools.log(userCredential.toString());
+
                                     final userVerify =
-                                        FirebaseAuth.instance.currentUser;
-                                    await userVerify?.sendEmailVerification();
+                                        AuthService.firebase().currentUser;
+                                    devtools.log(userVerify.toString());
+                                    AuthService.firebase()
+                                        .sendEmailVerification();
 
                                     Navigator.of(context).pushNamed(verifyView);
-                                  } on FirebaseAuthException catch (e) {
-                                    if (e.code == "email-already-in-use") {
-                                      await showErrorDialog(context,
-                                          "Your email is already in use! Please use email that have not in use yet!");
-                                    } else if (e.code == "weak-password") {
-                                      await showErrorDialog(context,
-                                          "Weak password, please insert strong password");
-                                    } else if (e.code == "invalid-email") {
-                                      await showErrorDialog(context,
-                                          "Invalid email, please check your email");
-                                    } else {
-                                      await showErrorDialog(context, e.code);
-                                    }
-                                  } catch (e) {
+                                  } on EmailAlreadyInUseAuthException {
+                                    await showErrorDialog(context,
+                                        "Your email is already in use! Please use email that have not in use yet!");
+                                  } on WeakPasswordAuthException {
+                                    await showErrorDialog(context,
+                                        "Weak password, please insert strong password");
+                                  } on InvalidEmailAuthException {
+                                    await showErrorDialog(context,
+                                        "Invalid email, please check your email");
+                                  } on GenericAuthException {
                                     await showErrorDialog(
-                                        context, e.toString());
+                                        context, "Authentification error");
                                   }
                                 },
                                 child: Container(

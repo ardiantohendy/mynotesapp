@@ -1,10 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/Animation/FadeAnimation.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 import 'dart:developer' as devtools show log;
 
 import '../alert/alert_dialog.dart';
 import '../constant/routes.dart';
+import '../services/auth/auth_exceptions.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -167,13 +168,11 @@ class _LoginViewState extends State<LoginView> {
                                   final email = _email.text;
                                   final password = _password.text;
                                   try {
-                                    final userCredential = await FirebaseAuth
-                                        .instance
-                                        .signInWithEmailAndPassword(
-                                            email: email, password: password);
-                                    devtools.log(userCredential.toString());
-                                    final userLogin = FirebaseAuth
-                                        .instance.currentUser?.emailVerified;
+                                    await AuthService.firebase().logIn(
+                                        email: email, password: password);
+                                    final userLogin = AuthService.firebase()
+                                        .currentUser
+                                        ?.isEmailVerivied;
                                     if (userLogin != false) {
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
@@ -182,19 +181,15 @@ class _LoginViewState extends State<LoginView> {
                                       Navigator.of(context)
                                           .pushNamed(verifyView);
                                     }
-                                  } on FirebaseAuthException catch (e) {
-                                    if (e.code == "user-not-found") {
-                                      await showErrorDialog(context,
-                                          "User not found! maybe you have not registered yet");
-                                    } else if (e.code == "wrong-password") {
-                                      await showErrorDialog(
-                                          context, "Incorect password");
-                                    } else {
-                                      await showErrorDialog(context, e.code);
-                                    }
-                                  } catch (e) {
+                                  } on UserNotFoundAuthException {
+                                    await showErrorDialog(context,
+                                        "User not found! maybe you have not registered yet");
+                                  } on WrongPasswordAuthException {
                                     await showErrorDialog(
-                                        context, e.toString());
+                                        context, "Incorect password");
+                                  } on GenericAuthException {
+                                    await showErrorDialog(
+                                        context, "Authenticitation Error");
                                   }
                                 },
                                 child: Container(
