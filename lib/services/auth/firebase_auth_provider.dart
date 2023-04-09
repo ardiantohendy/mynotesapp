@@ -41,30 +41,11 @@ class FirebaseAuthProvider implements AuthProvider {
     }
   }
 
-  // @override
-  // AuthUser? get email {
-  //   final userEmail = FirebaseAuth.instance.currentUser?.email;
-  //   if (userEmail != null) {
-  //     return AuthUser.fromFirebase();
-  //   }
-  // }
-
   @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       return AuthUser.fromFirebase(user);
-    } else {
-      return null;
-    }
-  }
-
-  @override
-  // TODO: implement userEmail
-  AuthUser? get userEmail {
-    final userEmail = FirebaseAuth.instance.currentUser?.email;
-    if (userEmail != null) {
-      return AuthUser.fromFirebase(userEmail as User);
     } else {
       return null;
     }
